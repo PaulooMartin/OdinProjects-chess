@@ -27,7 +27,7 @@ module MovementNonJump
         possible_coordinates << [current, coord_y]
       end
     end
-    possible_coordinates.filter { |coords_x, _coords_y| coords_x.between?(1, 8) }
+    possible_coordinates.filter { |coords| coords[0].between?(1, 8) }
   end
 
   def all_moves_vertical(coord_x, coord_y, max_moves_per_side)
@@ -39,7 +39,13 @@ module MovementNonJump
         possible_coordinates << [coord_x, current]
       end
     end
-    possible_coordinates.filter { |_coords_x, coords_y| coords_y.between?(1, 8) }
+    possible_coordinates.filter { |coords| coords[1].between?(1, 8) }
+  end
+
+  def all_moves_diagonals(coord_x, coord_y, max_moves_per_side)
+    diagonal_a = all_moves_upper_left(coord_x, coord_y, max_moves_per_side) + all_moves_lower_right(coord_x, coord_y, max_moves_per_side)
+    diagonal_b = all_moves_lower_left(coord_x, coord_y, max_moves_per_side) + all_moves_upper_right(coord_x, coord_y, max_moves_per_side)
+    diagonal_a + diagonal_b
   end
 
   def all_moves_upper_right(coord_x, coord_y, max_moves)
@@ -91,11 +97,8 @@ class Rook < ChessPiece
   # forgot to add that this was just a test
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
-    all_possible_moves = []
     max_moves = 7
-    all_moves_horizontal(coord_x, coord_y, max_moves).each { |coord| all_possible_moves << coord }
-    all_moves_vertical(coord_x, coord_y, max_moves).each { |coord| all_possible_moves << coord }
-    all_possible_moves
+    all_moves_horizontal(coord_x, coord_y, max_moves) + all_moves_vertical(coord_x, coord_y, max_moves)
   end
 end
 

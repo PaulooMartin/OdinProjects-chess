@@ -17,7 +17,43 @@ end
 class Pawn < ChessPiece
 end
 
+module MovementNonJump
+  def all_moves_horizontal(coord_x, coord_y, max_moves_per_side)
+    possible_coordinates = []
+    [-1, 1].each do |shift|
+      current = coord_x
+      max_moves_per_side.times do
+        current += shift
+        possible_coordinates << [current, coord_y]
+      end
+    end
+    possible_coordinates.filter { |coords_x, _coords_y| coords_x.between?(1, 8) }
+  end
+
+  def all_moves_vertical(coord_x, coord_y, max_moves_per_side)
+    possible_coordinates = []
+    [-1, 1].each do |shift|
+      current = coord_y
+      max_moves_per_side.times do
+        current += shift
+        possible_coordinates << [coord_x, current]
+      end
+    end
+    possible_coordinates.filter { |_coords_x, coords_y| coords_y.between?(1, 8) }
+  end
+end
+
 class Rook < ChessPiece
+  include Movement
+
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    all_possible_moves = []
+    max_moves = 7
+    all_moves_horizontal(coord_x, coord_y, max_moves).each { |coord| all_possible_moves << coord }
+    all_moves_vertical(coord_x, coord_y, max_moves).each { |coord| all_possible_moves << coord }
+    all_possible_moves
+  end
 end
 
 class Bishop < ChessPiece

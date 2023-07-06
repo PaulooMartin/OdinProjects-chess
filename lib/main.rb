@@ -27,8 +27,10 @@ module MovementNonJump
   end
 
   def all_moves_diagonals(coord_x, coord_y, max_moves_per_side)
-    diagonal_a = all_moves_upper_left(coord_x, coord_y, max_moves_per_side) + all_moves_lower_right(coord_x, coord_y, max_moves_per_side)
-    diagonal_b = all_moves_lower_left(coord_x, coord_y, max_moves_per_side) + all_moves_upper_right(coord_x, coord_y, max_moves_per_side)
+    diagonal_a = all_moves_upper_left(coord_x, coord_y,
+                                      max_moves_per_side) + all_moves_lower_right(coord_x, coord_y, max_moves_per_side)
+    diagonal_b = all_moves_lower_left(coord_x, coord_y,
+                                      max_moves_per_side) + all_moves_upper_right(coord_x, coord_y, max_moves_per_side)
     diagonal_a + diagonal_b
   end
 
@@ -130,6 +132,32 @@ class Bishop < ChessPiece
 end
 
 class Horse < ChessPiece
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    generate_possible_moves_horizontal(coord_x, coord_y) + generate_possible_moves_vertical(coord_x, coord_y)
+  end
+
+  private
+
+  def generate_possible_moves_horizontal(coord_x, coord_y)
+    possible_coordinates = []
+    [-2, 2].each do |shift_x|
+      [-1, 1].each do |shift_y|
+        possible_coordinates << [coord_x + shift_x, coord_y + shift_y]
+      end
+    end
+    possible_coordinates.keep_if { |x, y| x.between?(1, 8) && y.between?(1, 8) }
+  end
+
+  def generate_possible_moves_vertical(coord_x, coord_y)
+    possible_coordinates = []
+    [-1, 1].each do |shift_x|
+      [-2, 2].each do |shift_y|
+        possible_coordinates << [coord_x + shift_x, coord_y + shift_y]
+      end
+    end
+    possible_coordinates.keep_if { |x, y| x.between?(1, 8) && y.between?(1, 8) }
+  end
 end
 
 class Queen < ChessPiece

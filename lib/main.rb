@@ -14,9 +14,6 @@ class ChessPiece
   end
 end
 
-class Pawn < ChessPiece
-end
-
 module MovementNonJump
   def all_moves_horizontal(coord_x, coord_y, max_moves_per_side)
     all_moves_left(coord_x, coord_y, max_moves_per_side) + all_moves_right(coord_x, coord_y, max_moves_per_side)
@@ -117,10 +114,24 @@ module MovementNonJump
   end
 end
 
+class Pawn < ChessPiece
+  include MovementNonJump
+
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @moved = false
+  end
+
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    max_moves = @moved ? 1 : 2
+    all_moves_up(coord_x, coord_y, max_moves)
+  end
+end
+
 class Rook < ChessPiece
   include MovementNonJump
 
-  # forgot to add that this was just a test
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = 7
@@ -129,6 +140,13 @@ class Rook < ChessPiece
 end
 
 class Bishop < ChessPiece
+  include MovementNonJump
+
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    max_moves = 7
+    all_moves_diagonals(coord_x, coord_y, max_moves)
+  end
 end
 
 class Horse < ChessPiece
@@ -161,7 +179,27 @@ class Horse < ChessPiece
 end
 
 class Queen < ChessPiece
+  include MovementNonJump
+
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    max_moves = 7
+    horizontal = all_moves_horizontal(coord_x, coord_y, max_moves)
+    vertical = all_moves_vertical(coord_x, coord_y, max_moves)
+    diagonal = all_moves_diagonals(coord_x, coord_y, max_moves)
+    horizontal + vertical + diagonal
+  end
 end
 
 class King < ChessPiece
+  include MovementNonJump
+
+  def all_possible_moves
+    coord_x, coord_y = @current_coordinates
+    max_moves = 1
+    horizontal = all_moves_horizontal(coord_x, coord_y, max_moves)
+    vertical = all_moves_vertical(coord_x, coord_y, max_moves)
+    diagonal = all_moves_diagonals(coord_x, coord_y, max_moves)
+    horizontal + vertical + diagonal
+  end
 end

@@ -15,6 +15,7 @@ class Pawn < ChessPiece
 
   def initialize(color, starting_coordinates)
     super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2659" : "\u265F"
     @moved = false
   end
 
@@ -28,6 +29,11 @@ end
 class Rook < ChessPiece
   include MovementNonJump
 
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2656" : "\u265C"
+  end
+
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = 7
@@ -38,6 +44,11 @@ end
 class Bishop < ChessPiece
   include MovementNonJump
 
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2657" : "\u265D"
+  end
+
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = 7
@@ -46,6 +57,12 @@ class Bishop < ChessPiece
 end
 
 class Horse < ChessPiece
+
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2658" : "\u265E"
+  end
+
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     generate_possible_moves_horizontal(coord_x, coord_y) + generate_possible_moves_vertical(coord_x, coord_y)
@@ -77,6 +94,11 @@ end
 class Queen < ChessPiece
   include MovementNonJump
 
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2655" : "\u265B"
+  end
+
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = 7
@@ -89,6 +111,11 @@ end
 
 class King < ChessPiece
   include MovementNonJump
+
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2654" : "\u265A"
+  end
 
   def all_possible_moves
     coord_x, coord_y = @current_coordinates

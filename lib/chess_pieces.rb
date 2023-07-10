@@ -1,7 +1,7 @@
 require_relative 'movement_non_jump'
 
 class ChessPiece
-  attr_reader :color
+  attr_reader :color, :symbol
   attr_accessor :current_coordinates
 
   def initialize(color, starting_coordinates)

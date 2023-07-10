@@ -22,7 +22,11 @@ class Pawn < ChessPiece
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = @moved ? 1 : 2
-    all_moves_up(coord_x, coord_y, max_moves)
+    if @color == 'light'
+      all_moves_up(coord_x, coord_y, max_moves)
+    else
+      all_moves_down(coord_x, coord_y, max_moves)
+    end
   end
 end
 

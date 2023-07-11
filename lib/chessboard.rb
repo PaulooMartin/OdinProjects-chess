@@ -25,7 +25,7 @@ class Chessboard
     puts '    a  b  c  d  e  f  g  h '
   end
 
-  private
+  # private
 
   def switch_bg_color(current)
     dark = 'd3d3d3'
@@ -50,5 +50,16 @@ class Chessboard
       column, row = piece.current_coordinates
       @board[row][column] = piece
     end
+  end
+
+  def transform_player_input_to_origin_destination(player_input)
+    origin_to_destination = player_input.scan(/[a-h][1-8]/)
+    origin_to_destination.map! { |algebraic| transform_algebraic_to_board_coordinates(algebraic) }
+  end
+
+  def transform_algebraic_to_board_coordinates(algebraic_string)
+    column = algebraic_string[0].ord - 'a'.ord
+    row = algebraic_string[1].to_i - 1
+    [row, column]
   end
 end

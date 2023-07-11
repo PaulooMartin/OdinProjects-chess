@@ -8,7 +8,22 @@ class Player
     @active_pieces = init_create_pieces
   end
 
+  def prompt_player
+    validity = false
+    until validity
+      print "#{@name}'s turn. Give your coordinates: "
+      player_input = gets.chomp.downcase
+      validity = validate_player_input(player_input)
+    end
+    player_input
+  end
+
   private
+
+  def validate_player_input(player_input)
+    matcher = /\A[a-h][1-8][a-h][1-8]\z/
+    player_input.match?(matcher)
+  end
 
   def init_create_pieces
     officials_row = @color == 'light' ? 0 : 7

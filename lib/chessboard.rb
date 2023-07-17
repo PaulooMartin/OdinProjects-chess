@@ -25,7 +25,7 @@ class Chessboard
     puts '    a  b  c  d  e  f  g  h '
   end
 
-  # private
+  private
 
   def switch_bg_color(current)
     dark = 'd3d3d3'
@@ -40,14 +40,14 @@ class Chessboard
 
   def add_player_light_pieces_to_board
     @player_light.active_pieces.each do |piece|
-      column, row = piece.current_coordinates
+      row, column = piece.current_coordinates
       @board[row][column] = piece
     end
   end
 
   def add_player_dark_pieces_to_board
     @player_dark.active_pieces.each do |piece|
-      column, row = piece.current_coordinates
+      row, column = piece.current_coordinates
       @board[row][column] = piece
     end
   end

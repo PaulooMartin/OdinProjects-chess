@@ -9,18 +9,17 @@ class Player
   end
 
   def prompt_player
-    validity = false
-    until validity
+    player_input = ''
+    until player_input_valid?(player_input)
       print "#{@name}'s turn. Give your coordinates: "
       player_input = gets.chomp.downcase
-      validity = validate_player_input(player_input)
     end
     player_input
   end
 
   private
 
-  def validate_player_input(player_input)
+  def player_input_valid?(player_input)
     matcher = /\A[a-h][1-8][a-h][1-8]\z/
     player_input.match?(matcher)
   end

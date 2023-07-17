@@ -8,6 +8,7 @@ class ChessPiece
   def initialize(color, starting_coordinates)
     @color = color
     @current_coordinates = starting_coordinates
+    @moved = false
   end
 end
 
@@ -17,7 +18,6 @@ class Pawn < ChessPiece
   def initialize(color, starting_coordinates)
     super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2659" : "\u265F"
-    @moved = false
   end
 
   def all_possible_moves

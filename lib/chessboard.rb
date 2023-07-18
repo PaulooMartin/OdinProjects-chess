@@ -33,6 +33,10 @@ class Chessboard
     current == dark ? light : dark
   end
 
+  def switch_current_player
+    @current_player = @current_player == @player_light ? @player_dark : @player_light
+  end
+
   def add_player_pieces_to_board
     add_player_light_pieces_to_board
     add_player_dark_pieces_to_board

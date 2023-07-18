@@ -2,11 +2,12 @@ require_relative 'movement_non_jump'
 require_relative 'movement_jump'
 
 class ChessPiece
-  attr_reader :color, :symbol
+  attr_reader :owner, :color, :symbol
   attr_accessor :current_coordinates
 
-  def initialize(color, starting_coordinates)
-    @color = color
+  def initialize(owner, starting_coordinates)
+    @owner = owner
+    @color = @owner.color
     @current_coordinates = starting_coordinates
     @moved = false
   end
@@ -15,8 +16,8 @@ end
 class Pawn < ChessPiece
   include MovementNonJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2659" : "\u265F"
   end
 
@@ -34,8 +35,8 @@ end
 class Rook < ChessPiece
   include MovementNonJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2656" : "\u265C"
   end
 
@@ -49,8 +50,8 @@ end
 class Bishop < ChessPiece
   include MovementNonJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2657" : "\u265D"
   end
 
@@ -64,8 +65,8 @@ end
 class Horse < ChessPiece
   include MovementJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2658" : "\u265E"
   end
 
@@ -78,8 +79,8 @@ end
 class Queen < ChessPiece
   include MovementNonJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2655" : "\u265B"
   end
 
@@ -97,8 +98,8 @@ class King < ChessPiece
   include MovementNonJump
   include MovementJump
 
-  def initialize(color, starting_coordinates)
-    super(color, starting_coordinates)
+  def initialize(owner, starting_coordinates)
+    super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2654" : "\u265A"
   end
 

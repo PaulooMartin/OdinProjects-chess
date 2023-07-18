@@ -21,8 +21,8 @@ class Player
     piece.current_coordinates = destination
   end
 
-  def capture_piece(piece, enemy_player)
-    enemy_player.active_pieces.delete(piece)
+  def capture_piece(piece)
+    piece.owner.active_pieces.delete(piece)
   end
 
   def my_piece?(chess_piece)

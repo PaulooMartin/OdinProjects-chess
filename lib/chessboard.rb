@@ -43,14 +43,14 @@ class Chessboard
   end
 
   def add_player_light_pieces_to_board
-    @player_light.active_pieces.each do |piece|
+    @player_light.active_pieces.values.flatten.each do |piece|
       row, column = piece.current_coordinates
       @board[row][column] = piece
     end
   end
 
   def add_player_dark_pieces_to_board
-    @player_dark.active_pieces.each do |piece|
+    @player_dark.active_pieces.values.flatten.each do |piece|
       row, column = piece.current_coordinates
       @board[row][column] = piece
     end

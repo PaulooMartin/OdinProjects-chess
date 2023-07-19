@@ -21,12 +21,12 @@ class Player
     piece.current_coordinates = destination
   end
 
-  def capture_piece(piece)
-    piece.owner.active_pieces.delete(piece)
-  end
+  # def capture_piece(piece)
+  #   piece.owner.active_pieces.delete(piece)
+  # end
 
   def my_piece?(chess_piece)
-    active_pieces.include?(chess_piece)
+    @active_pieces.value?(chess_piece)
   end
 
   private
@@ -39,52 +39,54 @@ class Player
   def init_create_pieces
     officials_row = @color == 'light' ? 0 : 7
     pawns_row = @color == 'light' ? 1 : 6
-    init_create_pawns(pawns_row) + init_create_officials(officials_row)
+    officials = init_create_officials(officials_row)
+    pawns = init_create_pawns(pawns_row)
+    officials.merge(pawns)
   end
 
   def init_create_pawns(pawns_row)
     total_pawns = 8
-    pawns = []
+    pawn = []
     total_pawns.times do |column|
-      pawns << Pawn.new(self, [pawns_row, column])
+      pawn << Pawn.new(self, [pawns_row, column])
     end
-    pawns
+    { pawn: }
   end
 
   def init_create_officials(officials_row)
-    rooks = init_create_rooks(officials_row)
-    horses = init_create_horses(officials_row)
-    bishops = init_create_bishops(officials_row)
-    queen = init_create_queen(officials_row)
     king = init_create_king(officials_row)
-    rooks + horses + bishops + queen + king
+    queen = init_create_queen(officials_row)
+    rooks = init_create_rooks(officials_row)
+    bishops = init_create_bishops(officials_row)
+    horses = init_create_horses(officials_row)
+    king.merge(queen, rooks, bishops, horses)
   end
 
   def init_create_rooks(officials_row)
     rook_a_coordinates = [officials_row, 0]
     rook_b_coordinates = [officials_row, 7]
-    [Rook.new(self, rook_a_coordinates), Rook.new(self, rook_b_coordinates)]
+    { rook: [Rook.new(self, rook_a_coordinates), Rook.new(self, rook_b_coordinates)] }
   end
 
   def init_create_horses(officials_row)
     horse_a_coordinates = [officials_row, 1]
     horse_b_coordinates = [officials_row, 6]
-    [Horse.new(self, horse_a_coordinates), Horse.new(self, horse_b_coordinates)]
+    { horse: [Horse.new(self, horse_a_coordinates), Horse.new(self, horse_b_coordinates)] }
   end
 
   def init_create_bishops(officials_row)
     bishop_a_coordinates = [officials_row, 2]
     bishop_b_coordinates = [officials_row, 5]
-    [Bishop.new(self, bishop_a_coordinates), Bishop.new(self, bishop_b_coordinates)]
+    { bishop: [Bishop.new(self, bishop_a_coordinates), Bishop.new(self, bishop_b_coordinates)] }
   end
 
   def init_create_king(officials_row)
     king_coordinates = [officials_row, 4]
-    [King.new(self, king_coordinates)]
+    { king: King.new(self, king_coordinates) }
   end
 
   def init_create_queen(officials_row)
     queen_coordinates = [officials_row, 3]
-    [Queen.new(self, queen_coordinates)]
+    { queen: Queen.new(self, queen_coordinates) }
   end
 end

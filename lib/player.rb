@@ -26,7 +26,7 @@ class Player
   # end
 
   def my_piece?(chess_piece)
-    @active_pieces.value?(chess_piece)
+    chess_piece.owner == self
   end
 
   private

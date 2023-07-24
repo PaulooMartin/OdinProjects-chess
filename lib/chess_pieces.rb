@@ -22,7 +22,7 @@ class Pawn < ChessPiece
     @symbol = @color == 'light' ? "\u2659" : "\u265F"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
     max_moves = @moved ? 1 : 2
     if @color == 'light'
@@ -41,10 +41,14 @@ class Rook < ChessPiece
     @symbol = @color == 'light' ? "\u2656" : "\u265C"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
     max_moves = 7
-    all_moves_right(coord_x, coord_y, max_moves)
+    path_up = all_moves_up(coord_x, coord_y, max_moves)
+    path_down = all_moves_down(coord_x, coord_y, max_moves)
+    path_left = all_moves_left(coord_x, coord_y, max_moves)
+    path_right = all_moves_right(coord_x, coord_y, max_moves)
+    [path_up, path_down, path_left, path_right]
   end
 end
 
@@ -56,10 +60,14 @@ class Bishop < ChessPiece
     @symbol = @color == 'light' ? "\u2657" : "\u265D"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
     max_moves = 7
-    all_moves_diagonals(coord_x, coord_y, max_moves)
+    path_upleft = all_moves_upper_left(coord_x, coord_y, max_moves)
+    path_upright = all_moves_upper_right(coord_x, coord_y, max_moves)
+    path_downleft = all_moves_lower_left(coord_x, coord_y, max_moves)
+    path_downright = all_moves_lower_right(coord_x, coord_y, max_moves)
+    [path_upleft, path_upright, path_downleft, path_downright]
   end
 end
 
@@ -71,9 +79,9 @@ class Horse < ChessPiece
     @symbol = @color == 'light' ? "\u2658" : "\u265E"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
-    generate_possible_moves_horizontal(coord_x, coord_y) + generate_possible_moves_vertical(coord_x, coord_y)
+    [generate_possible_moves_horizontal(coord_x, coord_y), generate_possible_moves_vertical(coord_x, coord_y)]
   end
 end
 
@@ -85,13 +93,18 @@ class Queen < ChessPiece
     @symbol = @color == 'light' ? "\u2655" : "\u265B"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
     max_moves = 7
-    horizontal = all_moves_horizontal(coord_x, coord_y, max_moves)
-    vertical = all_moves_vertical(coord_x, coord_y, max_moves)
-    diagonal = all_moves_diagonals(coord_x, coord_y, max_moves)
-    horizontal + vertical + diagonal
+    path_up = all_moves_up(coord_x, coord_y, max_moves)
+    path_down = all_moves_down(coord_x, coord_y, max_moves)
+    path_left = all_moves_left(coord_x, coord_y, max_moves)
+    path_right = all_moves_right(coord_x, coord_y, max_moves)
+    path_upleft = all_moves_upper_left(coord_x, coord_y, max_moves)
+    path_upright = all_moves_upper_right(coord_x, coord_y, max_moves)
+    path_downleft = all_moves_lower_left(coord_x, coord_y, max_moves)
+    path_downright = all_moves_lower_right(coord_x, coord_y, max_moves)
+    [path_up, path_down, path_left, path_right, path_upleft, path_upright, path_downleft, path_downright]
   end
 end
 
@@ -104,12 +117,17 @@ class King < ChessPiece
     @symbol = @color == 'light' ? "\u2654" : "\u265A"
   end
 
-  def all_possible_moves
+  def generate_paths
     coord_x, coord_y = @current_coordinates
     max_moves = 1
-    horizontal = all_moves_horizontal(coord_x, coord_y, max_moves)
-    vertical = all_moves_vertical(coord_x, coord_y, max_moves)
-    diagonal = all_moves_diagonals(coord_x, coord_y, max_moves)
-    horizontal + vertical + diagonal
+    path_up = all_moves_up(coord_x, coord_y, max_moves)
+    path_down = all_moves_down(coord_x, coord_y, max_moves)
+    path_left = all_moves_left(coord_x, coord_y, max_moves)
+    path_right = all_moves_right(coord_x, coord_y, max_moves)
+    path_upleft = all_moves_upper_left(coord_x, coord_y, max_moves)
+    path_upright = all_moves_upper_right(coord_x, coord_y, max_moves)
+    path_downleft = all_moves_lower_left(coord_x, coord_y, max_moves)
+    path_downright = all_moves_lower_right(coord_x, coord_y, max_moves)
+    [path_up, path_down, path_left, path_right, path_upleft, path_upright, path_downleft, path_downright]
   end
 end

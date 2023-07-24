@@ -45,7 +45,6 @@ class Chessboard
   def add_player_pieces_to_board
     add_player_light_pieces_to_board
     add_player_dark_pieces_to_board
-    assign_board_to_all_pieces
   end
 
   def add_player_light_pieces_to_board
@@ -62,10 +61,6 @@ class Chessboard
     end
   end
 
-  def assign_board_to_all_pieces
-    @board.flatten.each { |tile| tile.in_chessboard = @board if tile.is_a?(ChessPiece) }
-  end
-
   def transform_player_input_to_origin_destination(player_input)
     origin_to_destination = player_input.scan(/[a-h][1-8]/)
     origin_to_destination.map! { |algebraic| transform_algebraic_to_board_coordinates(algebraic) }
@@ -75,5 +70,18 @@ class Chessboard
     column = algebraic_string[0].ord - 'a'.ord
     row = algebraic_string[1].to_i - 1
     [row, column]
+  end
+
+  def determine_path_end(unfiltered_path)
+    filtered_path = []
+    unfiltered_path.each do |row, column|
+      tile_occupant = @board[row][column]
+      if tile_occupant.is_a?(ChessPiece)
+        filtered_path << [row, column] if tile_occupant.owner == enemy_player
+        break
+      end
+      filtered_path << [row, column]
+    end
+    filtered_path
   end
 end

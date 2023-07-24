@@ -11,22 +11,6 @@ class ChessPiece
     @color = @owner.color
     @current_coordinates = starting_coordinates
     @moved = false
-    @in_chessboard = []
-  end
-
-  private
-
-  def filter_where_path_ends(unfiltered_path)
-    filtered_path = []
-    unfiltered_path.each do |row, column|
-      tile_occupant = @in_chessboard[row][column]
-      if tile_occupant.is_a?(ChessPiece)
-        filtered_path << [row, column] unless tile_occupant.owner == @owner
-        break
-      end
-      filtered_path << [row, column]
-    end
-    filtered_path
   end
 end
 
@@ -60,9 +44,7 @@ class Rook < ChessPiece
   def all_possible_moves
     coord_x, coord_y = @current_coordinates
     max_moves = 7
-    filter_where_path_ends(all_moves_up(coord_x, coord_y,
-                                        max_moves)) + filter_where_path_ends(all_moves_down(coord_x, coord_y,
-                                                                                            max_moves))
+    all_moves_right(coord_x, coord_y, max_moves)
   end
 end
 

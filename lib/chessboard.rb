@@ -1,5 +1,4 @@
 require_relative 'player'
-require 'pp'
 require_relative 'chess_pieces'
 
 class Chessboard

@@ -3,6 +3,7 @@ require_relative 'movement_jump'
 
 class ChessPiece
   attr_reader :owner, :color, :symbol
+  attr_writer :in_chessboard
   attr_accessor :current_coordinates
 
   def initialize(owner, starting_coordinates)
@@ -10,6 +11,7 @@ class ChessPiece
     @color = @owner.color
     @current_coordinates = starting_coordinates
     @moved = false
+    @in_chessboard = []
   end
 end
 

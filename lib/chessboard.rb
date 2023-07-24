@@ -1,4 +1,6 @@
 require_relative 'player'
+require 'pp'
+require_relative 'chess_pieces'
 
 class Chessboard
   def initialize
@@ -37,9 +39,14 @@ class Chessboard
     @current_player = @current_player == @player_light ? @player_dark : @player_light
   end
 
+  def enemy_player
+    @current_player.equal?(@player_light) ? @player_dark : @player_light
+  end
+
   def add_player_pieces_to_board
     add_player_light_pieces_to_board
     add_player_dark_pieces_to_board
+    assign_board_to_all_pieces
   end
 
   def add_player_light_pieces_to_board
@@ -54,6 +61,10 @@ class Chessboard
       row, column = piece.current_coordinates
       @board[row][column] = piece
     end
+  end
+
+  def assign_board_to_all_pieces
+    @board.flatten.each { |tile| tile.in_chessboard = @board if tile.is_a?(ChessPiece) }
   end
 
   def transform_player_input_to_origin_destination(player_input)

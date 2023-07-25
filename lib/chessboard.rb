@@ -72,15 +72,15 @@ class Chessboard
     [row, column]
   end
 
-  def determine_path_end(unfiltered_path)
+  def determine_path_end(unfiltered_path, jump = false)
     filtered_path = []
     unfiltered_path.each do |row, column|
       tile_occupant = @board[row][column]
-      if tile_occupant.is_a?(ChessPiece)
-        filtered_path << [row, column] if tile_occupant.owner == enemy_player
-        break
-      end
       filtered_path << [row, column]
+      if tile_occupant.is_a?(ChessPiece)
+        filtered_path.pop if tile_occupant.owner == @current_player
+        break unless jump
+      end
     end
     filtered_path
   end

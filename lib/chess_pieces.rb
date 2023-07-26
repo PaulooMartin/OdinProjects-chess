@@ -2,12 +2,11 @@ require_relative 'movement_non_jump'
 require_relative 'movement_jump'
 
 class ChessPiece
-  attr_reader :owner, :color, :symbol
+  attr_reader :color, :symbol
   attr_accessor :current_coordinates
 
-  def initialize(owner, starting_coordinates)
-    @owner = owner
-    @color = @owner.color
+  def initialize(color, starting_coordinates)
+    @color = color
     @current_coordinates = starting_coordinates
     @moved = false
   end
@@ -109,5 +108,42 @@ class King < ChessPiece
     max_moves = 1
     directions = %w[up down left right upleft upright lowleft lowright]
     directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
+  end
+
+  def checker_all_paths
+    checker_paths = {}
+    %i[cross updiagonals downdiagonals knight].each do |path_name|
+      checker_paths[path_name] = send("checker_paths_#{path_name}")
+    end
+    checker_paths
+  end
+
+  private
+
+  def checker_paths_cross
+    coord_x, coord_y = @current_coordinates
+    max_moves = 7
+    directions = %w[up down left right]
+    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+  end
+
+  def checker_paths_updiagonals
+    coord_x, coord_y = @current_coordinates
+    max_moves = 7
+    directions = %w[upleft upright]
+    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+  end
+
+  def checker_paths_downdiagonals
+    coord_x, coord_y = @current_coordinates
+    max_moves = 7
+    directions = %w[lowleft lowright]
+    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+  end
+
+  def checker_paths_knight
+    coord_x, coord_y = @current_coordinates
+    jump_directions = %w[horizontal vertical]
+    jump_directions.map { |path| send("make_jump_path_#{path}", coord_x, coord_y) }
   end
 end

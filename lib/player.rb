@@ -41,7 +41,7 @@ class Player
     pawns_row = @color == 'light' ? 1 : 6
     officials = init_create_officials(officials_row)
     pawns = init_create_pawns(pawns_row)
-    officials.merge(pawns)
+    officials.union(pawns)
   end
 
   def init_create_pawns(pawns_row)
@@ -50,7 +50,7 @@ class Player
     total_pawns.times do |column|
       pawn << Pawn.new(@color, [pawns_row, column])
     end
-    { pawn: }
+    pawn
   end
 
   def init_create_officials(officials_row)
@@ -59,34 +59,35 @@ class Player
     rooks = init_create_rooks(officials_row)
     bishops = init_create_bishops(officials_row)
     horses = init_create_horses(officials_row)
-    king.merge(queen, rooks, bishops, horses)
+    king.union(queen, rooks, bishops, horses)
   end
 
   def init_create_rooks(officials_row)
     rook_a_coordinates = [officials_row, 0]
     rook_b_coordinates = [officials_row, 7]
-    { rook: [Rook.new(@color, rook_a_coordinates), Rook.new(@color, rook_b_coordinates)] }
+    [Rook.new(@color, rook_a_coordinates), Rook.new(@color, rook_b_coordinates)]
   end
 
   def init_create_horses(officials_row)
     horse_a_coordinates = [officials_row, 1]
     horse_b_coordinates = [officials_row, 6]
-    { horse: [Horse.new(@color, horse_a_coordinates), Horse.new(@color, horse_b_coordinates)] }
+    [Horse.new(@color, horse_a_coordinates), Horse.new(@color, horse_b_coordinates)]
   end
 
   def init_create_bishops(officials_row)
     bishop_a_coordinates = [officials_row, 2]
     bishop_b_coordinates = [officials_row, 5]
-    { bishop: [Bishop.new(@color, bishop_a_coordinates), Bishop.new(@color, bishop_b_coordinates)] }
+    [Bishop.new(@color, bishop_a_coordinates), Bishop.new(@color, bishop_b_coordinates)]
   end
 
   def init_create_king(officials_row)
     king_coordinates = [officials_row, 4]
-    { king: King.new(@color, king_coordinates) }
+    @king = King.new(@color, king_coordinates)
+    [@king]
   end
 
   def init_create_queen(officials_row)
     queen_coordinates = [officials_row, 3]
-    { queen: Queen.new(@color, queen_coordinates) }
+    [Queen.new(@color, queen_coordinates)]
   end
 end

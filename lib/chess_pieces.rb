@@ -65,7 +65,7 @@ class Bishop < ChessPiece
   end
 end
 
-class Horse < ChessPiece
+class Knight < ChessPiece
   include MovementJump
 
   def initialize(owner, starting_coordinates)

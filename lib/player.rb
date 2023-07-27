@@ -58,8 +58,8 @@ class Player
     queen = init_create_queen(officials_row)
     rooks = init_create_rooks(officials_row)
     bishops = init_create_bishops(officials_row)
-    horses = init_create_horses(officials_row)
-    king.union(queen, rooks, bishops, horses)
+    knights = init_create_knights(officials_row)
+    king.union(queen, rooks, bishops, knights)
   end
 
   def init_create_rooks(officials_row)
@@ -68,10 +68,10 @@ class Player
     [Rook.new(@color, rook_a_coordinates), Rook.new(@color, rook_b_coordinates)]
   end
 
-  def init_create_horses(officials_row)
-    horse_a_coordinates = [officials_row, 1]
-    horse_b_coordinates = [officials_row, 6]
-    [Horse.new(@color, horse_a_coordinates), Horse.new(@color, horse_b_coordinates)]
+  def init_create_knights(officials_row)
+    knight_a_coordinates = [officials_row, 1]
+    knight_b_coordinates = [officials_row, 6]
+    [Knight.new(@color, knight_a_coordinates), Knight.new(@color, knight_b_coordinates)]
   end
 
   def init_create_bishops(officials_row)

@@ -10,6 +10,8 @@ class ChessPiece
     @current_coordinates = starting_coordinates
     @moved = false
   end
+
+  def can_attack?(piece); end
 end
 
 class Pawn < ChessPiece
@@ -110,38 +112,38 @@ class King < ChessPiece
     directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
   end
 
-  def checker_all_paths
-    checker_paths = {}
+  def attacker_all_paths
+    attacker_paths = {}
     %i[cross updiagonals downdiagonals knight].each do |path_name|
-      checker_paths[path_name] = send("checker_paths_#{path_name}")
+      attacker_paths[path_name] = send("attacker_paths_#{path_name}")
     end
-    checker_paths
+    attacker_paths
   end
 
   private
 
-  def checker_paths_cross
+  def attacker_paths_cross
     coord_x, coord_y = @current_coordinates
     max_moves = 7
     directions = %w[up down left right]
     directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
   end
 
-  def checker_paths_updiagonals
+  def attacker_paths_updiagonals
     coord_x, coord_y = @current_coordinates
     max_moves = 7
     directions = %w[upleft upright]
     directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
   end
 
-  def checker_paths_downdiagonals
+  def attacker_paths_downdiagonals
     coord_x, coord_y = @current_coordinates
     max_moves = 7
     directions = %w[lowleft lowright]
     directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
   end
 
-  def checker_paths_knight
+  def attacker_paths_knight
     coord_x, coord_y = @current_coordinates
     jump_directions = %w[horizontal vertical]
     jump_directions.map { |path| send("make_jump_path_#{path}", coord_x, coord_y) }

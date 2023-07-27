@@ -72,16 +72,49 @@ class Chessboard
     [row, column]
   end
 
-  def determine_path_end(unfiltered_path, jump = false)
+  def determine_path_end(unfiltered_path, origin_color, knight = false)
     filtered_path = []
     unfiltered_path.each do |row, column|
       tile_occupant = @board[row][column]
       filtered_path << [row, column]
       if tile_occupant.is_a?(ChessPiece)
-        filtered_path.pop if tile_occupant.owner == @current_player
-        break unless jump
+        filtered_path.pop if tile_occupant.color == origin_color
+        break unless knight
       end
     end
     filtered_path
+  end
+
+  def king_in_check?(color, board = @board)
+    king = find_king_in_board(color, board)
+    attacker_paths_map = get_king_attacker_paths(king)
+    attacker_paths = attacker_paths_map.values.flatten(1)
+    possible_attackers = get_all_pieces_in_all_paths(attacker_paths, board)
+    possible_attackers.any? { |enemy_piece| enemy_piece.can_attack?(king) }
+  end
+
+  def get_king_attacker_paths(king)
+    attacker_paths_map = king.attacker_all_paths
+    attacker_paths_map.each_key do |path_name|
+      attacker_paths_map[path_name].map! do |path|
+        is_knight = path_name.eql?(:knight)
+        determine_path_end(path, king.color, is_knight)
+      end
+    end
+    attacker_paths_map
+  end
+
+  def get_all_pieces_in_all_paths(attackers_paths, board)
+    all_occupants_inside_paths = attackers_paths.map do |path|
+      path.map { |row, column| board[row][column] }
+    end
+    all_occupants = all_occupants_inside_paths.flatten
+    all_occupants.filter { |occupant| occupant.is_a?(ChessPiece) }
+  end
+
+  def find_king_in_board(color, board = @board)
+    board.flatten.find do |tile_occupant|
+      tile_occupant.is_a?(King) && tile_occupant.color == color
+    end
   end
 end

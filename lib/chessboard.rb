@@ -10,10 +10,10 @@ class Chessboard
     add_player_pieces_to_board
   end
 
-  def print_chessboard
+  def print_chessboard(board = @board)
     dark = 'd3d3d3'
     light = 'white'
-    @board.reverse.each_with_index do |row, row_num|
+    board.reverse.each_with_index do |row, row_num|
       bg_color = row_num.even? ? light : dark
       print " #{8 - row_num} "
       row.each do |piece|
@@ -116,5 +116,60 @@ class Chessboard
     board.flatten.find do |tile_occupant|
       tile_occupant.is_a?(King) && tile_occupant.color == color
     end
+  end
+
+  def create_piece(fen_letter, coordinates)
+    color = fen_letter.match?(/[A-Z]/) ? 'light' : 'dark'
+    case fen_letter.downcase
+    when 'p' then Pawn.new(color, coordinates)
+    when 'n' then Knight.new(color, coordinates)
+    when 'b' then Bishop.new(color, coordinates)
+    when 'r' then Rook.new(color, coordinates)
+    when 'q' then Queen.new(color, coordinates)
+    when 'k' then King.new(color, coordinates)
+    else ChessPiece.new(color, coordinates)
+    end
+  end
+
+  def fen_to_game_state(fen)
+    separated_fen = separate_fen_to_parts(fen)
+    {
+      piece_placement: fen_placements_to_board_format(separated_fen[0]),
+      side_to_move: separated_fen[1],
+      castling_ability: separated_fen[2],
+      en_passant_target: separated_fen[3],
+      halfmove_clock: separated_fen[4].to_i,
+      fullmove_clock: separated_fen[5].to_i
+    }
+  end
+
+  def separate_fen_to_parts(unseparated_fen)
+    unseparated_fen.split(' ')
+  end
+
+  def fen_placements_to_board_format(fen_placements)
+    fen_rows = fen_placements.split('/').reverse
+    row_num = -1
+    fen_rows.map do |fen_row|
+      row_num += 1
+      fen_row_to_board_row(fen_row, row_num)
+    end
+  end
+
+  def fen_row_to_board_row(fen_row, row_num)
+    fen_letters = fen_row.split('')
+    board_row = []
+    col_num = 0
+    fen_letters.each do |fen_letter|
+      if fen_letter.match?(/[a-zA-Z]/)
+        board_row << create_piece(fen_letter, [row_num, col_num])
+        col_num += 1
+      else
+        count = fen_letter.to_i
+        col_num += count
+        count.times { board_row << ' ' }
+      end
+    end
+    board_row
   end
 end

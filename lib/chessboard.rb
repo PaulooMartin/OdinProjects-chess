@@ -138,8 +138,8 @@ class Chessboard
       side_to_move: separated_fen[1],
       castling_ability: separated_fen[2],
       en_passant_target: separated_fen[3],
-      halfmove_clock: separated_fen[4].to_i,
-      fullmove_clock: separated_fen[5].to_i
+      halfmove_clock: separated_fen[4],
+      fullmove_clock: separated_fen[5]
     }
   end
 
@@ -171,5 +171,48 @@ class Chessboard
       end
     end
     board_row
+  end
+
+  def game_state_to_fen(game_state)
+    board = game_state[:piece_placement]
+    piece_placements = board_format_to_fen_placements(board)
+    side_to_move = game_state[:side_to_move]
+    castling_ability = game_state[:castling_ability]
+    en_passant_target = game_state[:en_passant_target]
+    halfmove_clock = game_state[:halfmove_clock]
+    fullmove_clock = game_state[:fullmove_clock]
+    "#{piece_placements} #{side_to_move} #{castling_ability} #{en_passant_target} #{halfmove_clock} #{fullmove_clock}"
+  end
+
+  def board_format_to_fen_placements(board)
+    fen = []
+    board.each_with_index do |row, _index|
+      fen.unshift board_row_to_fen_row(row)
+    end
+    fen.join('/')
+  end
+
+  def board_row_to_fen_row(row)
+    fen = ''
+    dictionary = {
+      blank: 0,
+      king: 'k', queen: 'q', rook: 'r', bishop: 'b', knight: 'n', pawn: 'p'
+    }
+
+    row.each_with_index do |tile, index|
+      if tile.is_a?(ChessPiece)
+        fen << dictionary[:blank].to_s if dictionary[:blank].positive?
+        dictionary[:blank] = 0
+
+        color = tile.color
+        piece_name = tile.class.name.downcase.to_sym
+        fen_letter = color == 'light' ? dictionary[piece_name].upcase : dictionary[piece_name]
+        fen << fen_letter
+      else
+        dictionary[:blank] += 1
+      end
+      fen << dictionary[:blank].to_s if dictionary[:blank].positive? && (index == row.length - 1)
+    end
+    fen
   end
 end

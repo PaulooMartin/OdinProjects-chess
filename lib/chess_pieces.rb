@@ -9,6 +9,20 @@ class ChessPiece
     @color = color
     @current_coordinates = starting_coordinates
     @moved = false
+    @symbol = nil
+  end
+
+  def self.create_piece(fen_letter, coordinates)
+    color = fen_letter.match?(/[A-Z]/) ? 'light' : 'dark'
+    case fen_letter.downcase
+    when 'p' then Pawn.new(color, coordinates)
+    when 'n' then Knight.new(color, coordinates)
+    when 'b' then Bishop.new(color, coordinates)
+    when 'r' then Rook.new(color, coordinates)
+    when 'q' then Queen.new(color, coordinates)
+    when 'k' then King.new(color, coordinates)
+    else self.new(color, coordinates)
+    end
   end
 
   def can_attack?(piece); end

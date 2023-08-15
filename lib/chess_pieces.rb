@@ -1,4 +1,4 @@
-require_relative 'movement_non_jump'
+require_relative 'movement_straight'
 require_relative 'movement_jump'
 
 class ChessPiece
@@ -29,8 +29,6 @@ class ChessPiece
 end
 
 class Pawn < ChessPiece
-  include MovementNonJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2659" : "\u265F"
@@ -38,18 +36,16 @@ class Pawn < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    max_moves = @moved ? 1 : 2
+    max_distance = @moved ? 1 : 2
     if @color == 'light'
-      make_straight_path_up(coord_x, coord_y, max_moves)
+      MovementStraight.up(coord_x, coord_y, max_distance)
     else
-      make_straight_path_down(coord_x, coord_y, max_moves)
+      MovementStraight.down(coord_x, coord_y, max_distance)
     end
   end
 end
 
 class Rook < ChessPiece
-  include MovementNonJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2656" : "\u265C"
@@ -57,15 +53,16 @@ class Rook < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[up down left right]
-    directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    up = MovementStraight.up(coord_x, coord_y, max_distance)
+    down = MovementStraight.down(coord_x, coord_y, max_distance)
+    left = MovementStraight.left(coord_x, coord_y, max_distance)
+    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    [up, down, left, right]
   end
 end
 
 class Bishop < ChessPiece
-  include MovementNonJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2657" : "\u265D"
@@ -73,9 +70,12 @@ class Bishop < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[upleft upright lowleft lowright]
-    directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
+    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
+    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
+    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    [upleft, upright, lowleft, lowright]
   end
 end
 
@@ -94,8 +94,6 @@ class Knight < ChessPiece
 end
 
 class Queen < ChessPiece
-  include MovementNonJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2655" : "\u265B"
@@ -103,15 +101,20 @@ class Queen < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[up down left right upleft upright lowleft lowright]
-    directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    up = MovementStraight.up(coord_x, coord_y, max_distance)
+    down = MovementStraight.down(coord_x, coord_y, max_distance)
+    left = MovementStraight.left(coord_x, coord_y, max_distance)
+    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
+    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
+    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
+    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    [up, down, left, right, upleft, upright, lowleft, lowright]
   end
 end
 
 class King < ChessPiece
-  include MovementNonJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2654" : "\u265A"
@@ -119,9 +122,16 @@ class King < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    max_moves = 1
-    directions = %w[up down left right upleft upright lowleft lowright]
-    directions.map { |path_name| send("make_straight_path_#{path_name}", coord_x, coord_y, max_moves) }
+    max_distance = 1
+    up = MovementStraight.up(coord_x, coord_y, max_distance)
+    down = MovementStraight.down(coord_x, coord_y, max_distance)
+    left = MovementStraight.left(coord_x, coord_y, max_distance)
+    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
+    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
+    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
+    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    [up, down, left, right, upleft, upright, lowleft, lowright]
   end
 
   def attacker_all_paths
@@ -136,23 +146,28 @@ class King < ChessPiece
 
   def attacker_paths_cross
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[up down left right]
-    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    up = MovementStraight.up(coord_x, coord_y, max_distance)
+    down = MovementStraight.down(coord_x, coord_y, max_distance)
+    left = MovementStraight.left(coord_x, coord_y, max_distance)
+    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    [up, down, left, right]
   end
 
   def attacker_paths_updiagonals
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[upleft upright]
-    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
+    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
+    [upleft, upright]
   end
 
   def attacker_paths_downdiagonals
     coord_x, coord_y = @current_coordinates
-    max_moves = 7
-    directions = %w[lowleft lowright]
-    directions.map { |path| send("make_straight_path_#{path}", coord_x, coord_y, max_moves) }
+    max_distance = 7
+    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
+    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    [lowleft, lowright]
   end
 
   def attacker_paths_knight

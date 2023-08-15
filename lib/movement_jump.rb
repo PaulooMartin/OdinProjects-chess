@@ -1,5 +1,5 @@
 module MovementJump
-  def make_jump_path_horizontal(row, column)
+  def self.horizontal(row, column)
     possible_coordinates = []
     [-1, 1].each do |shift_x|
       [-2, 2].each do |shift_y|
@@ -9,7 +9,7 @@ module MovementJump
     possible_coordinates.keep_if { |x, y| x.between?(0, 7) && y.between?(0, 7) }
   end
 
-  def make_jump_path_vertical(row, column)
+  def self.vertical(row, column)
     possible_coordinates = []
     [-2, 2].each do |shift_x|
       [-1, 1].each do |shift_y|

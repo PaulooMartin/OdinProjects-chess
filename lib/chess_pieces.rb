@@ -80,8 +80,6 @@ class Bishop < ChessPiece
 end
 
 class Knight < ChessPiece
-  include MovementJump
-
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
     @symbol = @color == 'light' ? "\u2658" : "\u265E"
@@ -89,8 +87,9 @@ class Knight < ChessPiece
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
-    directions = %w[horizontal vertical]
-    directions.map { |path_name| send("make_jump_path_#{path_name}", coord_x, coord_y) }
+    horizontal = MovementJump.horizontal(coord_x, coord_y)
+    vertical = MovementJump.vertical(coord_x, coord_y)
+    [horizontal, vertical]
   end
 end
 
@@ -112,7 +111,6 @@ end
 
 class King < ChessPiece
   include MovementNonJump
-  include MovementJump
 
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
@@ -159,7 +157,8 @@ class King < ChessPiece
 
   def attacker_paths_knight
     coord_x, coord_y = @current_coordinates
-    jump_directions = %w[horizontal vertical]
-    jump_directions.map { |path| send("make_jump_path_#{path}", coord_x, coord_y) }
+    horizontal = MovementJump.horizontal(coord_x, coord_y)
+    vertical = MovementJump.vertical(coord_x, coord_y)
+    [horizontal, vertical]
   end
 end

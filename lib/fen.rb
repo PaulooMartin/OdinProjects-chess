@@ -21,6 +21,18 @@ module Fen
     "#{piece_placements} #{side_to_move} #{castling_ability} #{en_passant_target} #{halfmove_clock} #{fullmove_clock}"
   end
 
+  def self.fen_board_to_chess_board(fen_board)
+    row_num = -1
+    fen_board.map do |row|
+      col_num = -1
+      row_num += 1
+      row.map do |tile|
+        col_num += 1
+        tile == ' ' ? ' ' : ChessPiece.create_piece(tile, [row_num, col_num])
+      end
+    end
+  end
+
   module FenComponents
     def self.fen_placements_to_board_format(fen_placements)
       fen_rows = fen_placements.split('/').reverse
@@ -31,7 +43,7 @@ module Fen
       end
     end
 
-    def self.fen_row_to_board_row(fen_row, row_num)
+    def self.fen_row_to_board_row(fen_row, _row_num)
       fen_letters = fen_row.split('')
       board_row = []
       col_num = 0

@@ -1,11 +1,12 @@
 require 'fen'
+require 'chess_pieces'
 
 # rubocop:disable Metrics/BlockLength
 describe 'FEN' do
   subject(:fen_string_a) { '1rb1r1nk/6Rp/pqp2p1P/3p4/5Q2/2N5/PPP1BPP1/2KR4 b - - 0 21' }
   subject(:fen_string_b) { 'r1bqk2r/pp2bppp/2nppn2/6B1/3NP3/2N5/PPPQ1PPP/R3KB1R w KQkq - 2 8' }
 
-  describe '#fen_to_game_state' do
+  describe '#self.fen_to_game_state' do
     context 'when converting a fen into a game_state' do
       it 'matches the equivalent game_state' do
         row_a = [' ', ' ', 'K', 'R', ' ', ' ', ' ', ' ']
@@ -53,7 +54,7 @@ describe 'FEN' do
     end
   end
 
-  describe '#game_state_to_fen' do
+  describe '#self.game_state_to_fen' do
     context 'when converting a game_state to a fen' do
       it 'matches the equivalent fen_string' do
         row_a = [' ', ' ', 'K', 'R', ' ', ' ', ' ', ' ']
@@ -97,6 +98,40 @@ describe 'FEN' do
         }
         result = Fen.game_state_to_fen(game_state)
         expect(result).to eql(fen_string_b)
+      end
+    end
+  end
+
+  describe '#self.fen_board_to_chess_board' do
+    context 'when converting a fen_board to a chess_board' do
+      matcher :equivalent_to_fen do |fen_board_flat|
+        match do |chess_board_flat|
+          index = 0
+          chess_board_flat.all? do |chess_tile|
+            fen_tile = fen_board_flat[index]
+            index += 1
+            if fen_tile == ' '
+              chess_tile == fen_tile
+            else
+              color = fen_tile.match?(/[A-Z]/) ? 'light' : 'dark'
+              map = { 'k' => King, 'q' => Queen, 'r' => Rook, 'b' => Bishop, 'n' => Knight, 'p' => Pawn }
+              tile_class = map[fen_tile.downcase]
+              (chess_tile.color == color) && chess_tile.instance_of?(tile_class)
+            end
+          end
+        end
+      end
+
+      it 'returns an array replacing the fen letters into pieces' do
+        fen_board = Fen.fen_to_game_state(fen_string_a)[:piece_placement]
+        chessboard_flat = Fen.fen_board_to_chess_board(fen_board).flatten
+        expect(chessboard_flat).to equivalent_to_fen(fen_board.flatten)
+      end
+
+      it 'returns an array replacing the fen letters into pieces' do
+        fen_board = Fen.fen_to_game_state(fen_string_b)[:piece_placement]
+        chessboard_flat = Fen.fen_board_to_chess_board(fen_board).flatten
+        expect(chessboard_flat).to equivalent_to_fen(fen_board.flatten)
       end
     end
   end

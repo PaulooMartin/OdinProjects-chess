@@ -1,19 +1,19 @@
 module Check
   def self.king_in_check?(color, board)
     king = CheckComponents.find_king_in_board(color, board)
-    attacker_paths_map = CheckComponents.get_king_attacker_paths(king)
+    attacker_paths_map = CheckComponents.get_king_attacker_paths(king, board)
     attacker_paths = attacker_paths_map.values.flatten(1)
     possible_attackers = CheckComponents.get_all_pieces_in_all_paths(attacker_paths, board)
     possible_attackers.any? { |enemy_piece| ValidMove.within_piece_path?(board, enemy_piece, king.current_coordinates) }
   end
 
   module CheckComponents
-    def self.get_king_attacker_paths(king)
+    def self.get_king_attacker_paths(king, board)
       attacker_paths_map = king.attacker_all_paths
       attacker_paths_map.each_key do |path_name|
         attacker_paths_map[path_name].map! do |path|
-          is_knight = path_name.eql?(:knight)
-          MovePathStop.determine_path_stop(path, king.color, is_knight)
+          is_knight = 'knight' if path_name.eql?(:knight)
+          MovePathStop.correct_path(board, path, king.color, is_knight)
         end
       end
       attacker_paths_map

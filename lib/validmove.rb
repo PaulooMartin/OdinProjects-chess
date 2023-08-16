@@ -8,12 +8,12 @@ module ValidMove
   end
 
   def self.within_piece_path?(board, piece, destination)
-    is_knight = piece.is_a?(Knight)
+    is_of_chesspiece = piece.class.name.downcase
     unfiltered_paths = piece.generate_paths
     filtered_paths = unfiltered_paths.map do |path|
-      MovePathStop.determine_path_stop(board, path, piece.color, is_knight)
+      MovePathStop.correct_path(board, path, piece.color, is_of_chesspiece)
     end
-    filtered_paths.any? { |path| path.include(destination) }
+    filtered_paths.any? { |path| path.include?(destination) }
   end
 
   def self.move_results_in_check?(board, piece_to_move, destination)

@@ -19,9 +19,12 @@ module ValidMove
   def self.move_results_in_check?(board, piece_to_move, destination)
     board_copy = board.map { |row| row.clone.map(&:clone) }
     origin_row, origin_col = piece_to_move.current_coordinates
+    piece_copy = board_copy[origin_row][origin_col]
     dest_row, dest_col = destination
+
+    piece_copy.current_coordinates = [dest_row, dest_col]
     board_copy[origin_row][origin_col] = ' '
-    board_copy[dest_row][dest_col] = piece_to_move
-    Check.king_in_check?(piece_to_move.color, board_copy)
+    board_copy[dest_row][dest_col] = piece_copy
+    Check.king_in_check?(piece_copy.color, board_copy)
   end
 end

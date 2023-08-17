@@ -1,5 +1,7 @@
 require 'validmove'
 require 'move_path_stop'
+require 'check'
+# used fen and chess_pieces for easier testing
 require 'fen'
 require 'chess_pieces'
 
@@ -66,6 +68,54 @@ describe 'ValidMove' do
         piece_to_test = board_c[coords[0]][coords[1]]
         destination = [4, 1]
         result = ValidMove.within_piece_path?(board_c, piece_to_test, destination)
+        expect(result).to be(false)
+      end
+    end
+  end
+
+  describe '#self.move_results_in_check?' do
+    context 'when determining if move will result to piece-to-move\'s king to be in check' do
+      it 'returns true' do
+        piece_to_move = board_a[7][4]
+        destination = [6, 3]
+        result = ValidMove.move_results_in_check?(board_a, piece_to_move, destination)
+        expect(result).to be(true)
+      end
+
+      it 'returns true' do
+        piece_to_move = board_b[7][1]
+        destination = [5, 2]
+        result = ValidMove.move_results_in_check?(board_b, piece_to_move, destination)
+        expect(result).to be(true)
+      end
+
+      it 'returns true' do
+        piece_to_move = board_c[2][2]
+        destination = [0, 1]
+        result = ValidMove.move_results_in_check?(board_c, piece_to_move, destination)
+        expect(result).to be(true)
+      end
+    end
+
+    context 'when determining if move will result to piece-to-move\'s king to NOT be in check' do
+      it 'returns false' do
+        piece_to_move = board_a[7][2]
+        destination = [6, 3]
+        result = ValidMove.move_results_in_check?(board_a, piece_to_move, destination)
+        expect(result).to be(false)
+      end
+
+      it 'returns false' do
+        piece_to_move = board_b[7][1]
+        destination = [6, 3]
+        result = ValidMove.move_results_in_check?(board_b, piece_to_move, destination)
+        expect(result).to be(false)
+      end
+
+      it 'returns false' do
+        piece_to_move = board_c[0][0]
+        destination = [0, 1]
+        result = ValidMove.move_results_in_check?(board_c, piece_to_move, destination)
         expect(result).to be(false)
       end
     end

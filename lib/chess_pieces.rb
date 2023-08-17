@@ -31,16 +31,22 @@ end
 class Pawn < ChessPiece
   def initialize(owner, starting_coordinates)
     super(owner, starting_coordinates)
-    @symbol = @color == 'light' ? "\u2659" : "\u265F"
+    if @color == 'light'
+      @moved = starting_coordinates[0] != 1
+      @symbol = "\u2659"
+    else
+      @moved = starting_coordinates[0] != 6
+      @symbol = "\u265F"
+    end
   end
 
   def generate_paths
     coord_x, coord_y = @current_coordinates
     max_distance = @moved ? 1 : 2
     if @color == 'light'
-      MovementStraight.up(coord_x, coord_y, max_distance)
+      [MovementStraight.up(coord_x, coord_y, max_distance)]
     else
-      MovementStraight.down(coord_x, coord_y, max_distance)
+      [MovementStraight.down(coord_x, coord_y, max_distance)]
     end
   end
 end

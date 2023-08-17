@@ -8,7 +8,6 @@ class ChessPiece
   def initialize(color, starting_coordinates)
     @color = color
     @current_coordinates = starting_coordinates
-    @moved = false
     @symbol = nil
   end
 
@@ -21,122 +20,119 @@ class ChessPiece
     when 'r' then Rook.new(color, coordinates)
     when 'q' then Queen.new(color, coordinates)
     when 'k' then King.new(color, coordinates)
-    else self.new(color, coordinates)
+    else new(color, coordinates)
     end
   end
 
-  def can_attack?(piece); end
+  private
+
+  def current_row
+    @current_coordinates[0]
+  end
+
+  def current_col
+    @current_coordinates[1]
+  end
 end
 
 class Pawn < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
-    if @color == 'light'
-      @moved = starting_coordinates[0] != 1
-      @symbol = "\u2659"
-    else
-      @moved = starting_coordinates[0] != 6
-      @symbol = "\u265F"
-    end
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
+    @symbol = @color == 'light' ? "\u2659" : "\u265F"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
-    max_distance = @moved ? 1 : 2
     if @color == 'light'
-      [MovementStraight.up(coord_x, coord_y, max_distance)]
+      max_distance = current_row == 1 ? 2 : 1
+      [MovementStraight.up(current_row, current_col, max_distance)]
     else
-      [MovementStraight.down(coord_x, coord_y, max_distance)]
+      max_distance = current_row == 6 ? 2 : 1
+      [MovementStraight.down(current_row, current_col, max_distance)]
     end
   end
 end
 
 class Rook < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2656" : "\u265C"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    up = MovementStraight.up(coord_x, coord_y, max_distance)
-    down = MovementStraight.down(coord_x, coord_y, max_distance)
-    left = MovementStraight.left(coord_x, coord_y, max_distance)
-    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    up = MovementStraight.up(current_row, current_col, max_distance)
+    down = MovementStraight.down(current_row, current_col, max_distance)
+    left = MovementStraight.left(current_row, current_col, max_distance)
+    right = MovementStraight.right(current_row, current_col, max_distance)
     [up, down, left, right]
   end
 end
 
 class Bishop < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2657" : "\u265D"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
-    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
-    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
-    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    upleft = MovementStraight.upleft(current_row, current_col, max_distance)
+    upright = MovementStraight.upright(current_row, current_col, max_distance)
+    lowleft = MovementStraight.lowleft(current_row, current_col, max_distance)
+    lowright = MovementStraight.lowright(current_row, current_col, max_distance)
     [upleft, upright, lowleft, lowright]
   end
 end
 
 class Knight < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2658" : "\u265E"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
-    horizontal = MovementJump.horizontal(coord_x, coord_y)
-    vertical = MovementJump.vertical(coord_x, coord_y)
+    horizontal = MovementJump.horizontal(current_row, current_col)
+    vertical = MovementJump.vertical(current_row, current_col)
     [horizontal, vertical]
   end
 end
 
 class Queen < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2655" : "\u265B"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    up = MovementStraight.up(coord_x, coord_y, max_distance)
-    down = MovementStraight.down(coord_x, coord_y, max_distance)
-    left = MovementStraight.left(coord_x, coord_y, max_distance)
-    right = MovementStraight.right(coord_x, coord_y, max_distance)
-    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
-    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
-    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
-    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    up = MovementStraight.up(current_row, current_col, max_distance)
+    down = MovementStraight.down(current_row, current_col, max_distance)
+    left = MovementStraight.left(current_row, current_col, max_distance)
+    right = MovementStraight.right(current_row, current_col, max_distance)
+    upleft = MovementStraight.upleft(current_row, current_col, max_distance)
+    upright = MovementStraight.upright(current_row, current_col, max_distance)
+    lowleft = MovementStraight.lowleft(current_row, current_col, max_distance)
+    lowright = MovementStraight.lowright(current_row, current_col, max_distance)
     [up, down, left, right, upleft, upright, lowleft, lowright]
   end
 end
 
 class King < ChessPiece
-  def initialize(owner, starting_coordinates)
-    super(owner, starting_coordinates)
+  def initialize(color, starting_coordinates)
+    super(color, starting_coordinates)
     @symbol = @color == 'light' ? "\u2654" : "\u265A"
   end
 
   def generate_paths
-    coord_x, coord_y = @current_coordinates
     max_distance = 1
-    up = MovementStraight.up(coord_x, coord_y, max_distance)
-    down = MovementStraight.down(coord_x, coord_y, max_distance)
-    left = MovementStraight.left(coord_x, coord_y, max_distance)
-    right = MovementStraight.right(coord_x, coord_y, max_distance)
-    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
-    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
-    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
-    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    up = MovementStraight.up(current_row, current_col, max_distance)
+    down = MovementStraight.down(current_row, current_col, max_distance)
+    left = MovementStraight.left(current_row, current_col, max_distance)
+    right = MovementStraight.right(current_row, current_col, max_distance)
+    upleft = MovementStraight.upleft(current_row, current_col, max_distance)
+    upright = MovementStraight.upright(current_row, current_col, max_distance)
+    lowleft = MovementStraight.lowleft(current_row, current_col, max_distance)
+    lowright = MovementStraight.lowright(current_row, current_col, max_distance)
     [up, down, left, right, upleft, upright, lowleft, lowright]
   end
 
@@ -151,35 +147,31 @@ class King < ChessPiece
   private
 
   def attacker_paths_cross
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    up = MovementStraight.up(coord_x, coord_y, max_distance)
-    down = MovementStraight.down(coord_x, coord_y, max_distance)
-    left = MovementStraight.left(coord_x, coord_y, max_distance)
-    right = MovementStraight.right(coord_x, coord_y, max_distance)
+    up = MovementStraight.up(current_row, current_col, max_distance)
+    down = MovementStraight.down(current_row, current_col, max_distance)
+    left = MovementStraight.left(current_row, current_col, max_distance)
+    right = MovementStraight.right(current_row, current_col, max_distance)
     [up, down, left, right]
   end
 
   def attacker_paths_updiagonals
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    upleft = MovementStraight.upleft(coord_x, coord_y, max_distance)
-    upright = MovementStraight.upright(coord_x, coord_y, max_distance)
+    upleft = MovementStraight.upleft(current_row, current_col, max_distance)
+    upright = MovementStraight.upright(current_row, current_col, max_distance)
     [upleft, upright]
   end
 
   def attacker_paths_downdiagonals
-    coord_x, coord_y = @current_coordinates
     max_distance = 7
-    lowleft = MovementStraight.lowleft(coord_x, coord_y, max_distance)
-    lowright = MovementStraight.lowright(coord_x, coord_y, max_distance)
+    lowleft = MovementStraight.lowleft(current_row, current_col, max_distance)
+    lowright = MovementStraight.lowright(current_row, current_col, max_distance)
     [lowleft, lowright]
   end
 
   def attacker_paths_knight
-    coord_x, coord_y = @current_coordinates
-    horizontal = MovementJump.horizontal(coord_x, coord_y)
-    vertical = MovementJump.vertical(coord_x, coord_y)
+    horizontal = MovementJump.horizontal(current_row, current_col)
+    vertical = MovementJump.vertical(current_row, current_col)
     [horizontal, vertical]
   end
 end

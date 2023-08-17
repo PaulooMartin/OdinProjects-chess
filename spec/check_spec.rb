@@ -9,6 +9,7 @@ require 'chess_pieces'
 
 # rubocop:disable Metrics/BlockLength
 describe 'Check' do
+  # https://www.chessgames.com/perl/chessgame?gid=2358765
   subject(:fen_a) { '1rb1r1nk/6Rp/p1p2p1P/3p4/5Q2/2N5/PqP1BPP1/2KR4 w - - 0 22' }
   subject(:fen_b) { '1rbqr1nk/6Rp/p1p2p2/3p3P/5b2/2N3Q1/PPP1BPP1/2KR4 w - - 0 20' }
   subject(:fen_c) { 'br3N2/p4pbk/2n1p1p1/8/2Pp4/3P1N2/P4PB1/B3RK2 b - - 0 29' }

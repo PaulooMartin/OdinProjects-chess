@@ -9,6 +9,7 @@ require 'movement_straight'
 
 # rubocop:disable Metrics/BlockLength
 describe 'MovePathStop' do
+  # https://www.chessgames.com/perl/chessgame?gid=2358765
   subject(:fen_a) { 'rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3' }
   subject(:fen_b) { 'r1bqkb1r/pp2pppp/2np1n2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R b KQkq - 4 6' }
   subject(:fen_c) { '1rbqr1nk/6Rp/p1pb1p2/3p3P/5B2/2N1Q3/PPP1BPP1/2KR4 w - - 1 19' }

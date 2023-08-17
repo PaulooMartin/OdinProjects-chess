@@ -1,12 +1,14 @@
 require 'validmove'
 require 'move_path_stop'
 require 'check'
+require 'pp'
 # used fen and chess_pieces for easier testing
 require 'fen'
 require 'chess_pieces'
 
 # rubocop:disable Metrics/BlockLength
 describe 'ValidMove' do
+  # https://www.chessgames.com/perl/chessgame?gid=1693032
   subject(:fen_a) { 'rnbqkbnr/pp2pppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3' }
   subject(:fen_b) { 'rn1qkbnr/pp1Bpppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4' }
   subject(:fen_c) { 'r3k2r/pp2ppbp/2np1np1/q7/2PNP3/1PN2P2/PB4PP/R2QK2R w KQkq - 3 12' }

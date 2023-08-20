@@ -1,6 +1,5 @@
 class Player
   attr_reader :name, :color
-  attr_accessor :active_pieces
 
   def initialize(name, color)
     @name = name
@@ -9,7 +8,11 @@ class Player
 
   def self.transform_player_input_to_origin_destination(player_input)
     origin_to_destination = player_input.scan(/[a-h][1-8]/)
-    origin_to_destination.map! { |algebraic| transform_algebraic_to_board_coordinates(algebraic) }
+    origin_to_destination.map! do |algebraic|
+      column = algebraic[0].ord - 'a'.ord
+      row = algebraic[1].to_i - 1
+      [row, column]
+    end
   end
 
   def prompt_player
@@ -19,13 +22,5 @@ class Player
       player_input = gets.chomp.downcase
     end
     player_input
-  end
-
-  private
-
-  def transform_algebraic_to_board_coordinates(algebraic_string)
-    column = algebraic_string[0].ord - 'a'.ord
-    row = algebraic_string[1].to_i - 1
-    [row, column]
   end
 end

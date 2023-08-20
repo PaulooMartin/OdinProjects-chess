@@ -46,4 +46,41 @@ describe Player do
       end
     end
   end
+
+  describe '#transform_player_input_to_origin_destination' do
+    context 'when transforming the player_input' do
+      it 'returns an array' do
+        player_input = 'a1f5'
+        result = Player.transform_player_input_to_origin_destination(player_input)
+        expect(result).to be_an(Array)
+      end
+
+      it 'has two elements' do
+        player_input = 'a1f5'
+        result = Player.transform_player_input_to_origin_destination(player_input).length
+        expect(result).to eq(2)
+      end
+
+      it 'all elements are an Array' do
+        player_input = 'a1f5'
+        origin_destination = Player.transform_player_input_to_origin_destination(player_input)
+        result = origin_destination.all? { |element| element.is_a?(Array) }
+        expect(result).to be(true)
+      end
+
+      it 'all elements has two elements' do
+        player_input = 'a1f8'
+        origin_destination = Player.transform_player_input_to_origin_destination(player_input)
+        result = origin_destination.all? { |coords| coords.length == 2 }
+        expect(result).to be(true)
+      end
+
+      it 'all elements within all elements are numbers between 0 and 7' do
+        player_input = 'a3f8'
+        origin_destination = Player.transform_player_input_to_origin_destination(player_input)
+        result = origin_destination.all? { |coords| coords.all? { |coord| coord.between?(0, 7) } }
+        expect(result).to be(true)
+      end
+    end
+  end
 end

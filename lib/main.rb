@@ -16,7 +16,9 @@ def valid_move?(board, side_to_move, player_move)
   destination = player_move[1]
 
   piece_to_move = board[row_orig][col_orig]
+  destination_tile = board[destination[0]][destination[1]]
   ValidMove.a_chesspiece?(piece_to_move) &&
+    ValidMove.not_a_king?(destination_tile) &&
     ValidMove.matching_colors?(side_to_move, piece_to_move) &&
     ValidMove.within_piece_path?(board, piece_to_move, destination) &&
     !ValidMove.move_results_in_check?(board, piece_to_move, destination)
@@ -44,7 +46,7 @@ def switch_bg_color(current)
   current == dark ? light : dark
 end
 
-start_fen = '1rbqr1nk/6Rp/p1p2p2/3p3P/5b2/2N3Q1/PPP1BPP1/2KR4 w - - 0 20'
+start_fen = 'k7/8/K7/8/8/8/8/7Q w - - 0 1'
 player_light = Player.new('layt', 'light')
 player_dark = Player.new('darc', 'dark')
 

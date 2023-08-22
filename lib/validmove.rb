@@ -1,6 +1,10 @@
 module ValidMove
-  def self.a_chesspiece?(tile)
-    tile.is_a?(ChessPiece)
+  def self.a_chesspiece?(origin_tile)
+    origin_tile.is_a?(ChessPiece)
+  end
+
+  def self.not_a_king?(destination_tile)
+    !destination_tile.is_a?(King)
   end
 
   def self.matching_colors?(player, piece)

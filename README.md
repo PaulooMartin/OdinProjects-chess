@@ -11,7 +11,7 @@
 1. Refactor until things are perfect
 
 
-### What I could have done better
+### What I could have done better or realizations
 
 A. Ask questions more often
 - There were some things that I could have saved time on if I had done more research or ask questions about.
@@ -30,3 +30,6 @@ D. Taking care of myself
 E. Setting goals early
 
 F. Writing automated tests
+
+G. OOP
+- Today is August 24th. OOP is hard. When the OOP is not obvious, I freeze, then I do not know what to do. I have been implementing some Compression Oriented Programming along the way to cope with the difficulty and be able to move forward. Yet, at the same time, I think about when I am going to apply for jobs. What if they want someone who is able to do OOP :(
